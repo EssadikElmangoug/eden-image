@@ -11,19 +11,16 @@ __turbopack_esm__({
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/image.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$fal$2d$ai$2f$client$2f$src$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@fal-ai/client/src/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_refresh__.signature();
 'use client';
 ;
 ;
 ;
-;
 const Page = ()=>{
     _s();
     const [prompt, setPrompt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
-    const [video, setVideo] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [image, setImage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isGenerating, setIsGenerating] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const handleSubmit = async (e)=>{
@@ -31,21 +28,224 @@ const Page = ()=>{
         setIsGenerating(true);
         setError(null);
         try {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$fal$2d$ai$2f$client$2f$src$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fal"].config({
-                credentials: ("TURBOPACK compile-time value", "4d97aa45-7cc5-4313-aaf0-e00c198445d1:09ed6ca94c2886d663a015ac2f44b8f8")
-            });
-            const result = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$fal$2d$ai$2f$client$2f$src$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fal"].subscribe("fal-ai/kling-video/v1.6/standard/text-to-video", {
-                input: {
-                    prompt: prompt
+            // Load the base workflow
+            const baseWorkflow = {
+                "6": {
+                    "inputs": {
+                        "text": prompt,
+                        "clip": [
+                            "11",
+                            0
+                        ]
+                    },
+                    "class_type": "CLIPTextEncode",
+                    "_meta": {
+                        "title": "CLIP Text Encode (Positive Prompt)"
+                    }
                 },
-                logs: true,
-                onQueueUpdate: (update)=>{
-                    if (update.status === "IN_PROGRESS") {
-                        update.logs.map((log)=>log.message).forEach(console.log);
+                "8": {
+                    "inputs": {
+                        "samples": [
+                            "13",
+                            0
+                        ],
+                        "vae": [
+                            "10",
+                            0
+                        ]
+                    },
+                    "class_type": "VAEDecode",
+                    "_meta": {
+                        "title": "VAE Decode"
+                    }
+                },
+                "9": {
+                    "inputs": {
+                        "filename_prefix": "ComfyUI",
+                        "images": [
+                            "8",
+                            0
+                        ]
+                    },
+                    "class_type": "SaveImage",
+                    "_meta": {
+                        "title": "Save Image"
+                    }
+                },
+                "10": {
+                    "inputs": {
+                        "vae_name": "ae.safetensors"
+                    },
+                    "class_type": "VAELoader",
+                    "_meta": {
+                        "title": "Load VAE"
+                    }
+                },
+                "11": {
+                    "inputs": {
+                        "clip_name1": "t5xxl_fp8_e4m3fn.safetensors",
+                        "clip_name2": "clip_l.safetensors",
+                        "type": "flux",
+                        "device": "default"
+                    },
+                    "class_type": "DualCLIPLoader",
+                    "_meta": {
+                        "title": "DualCLIPLoader"
+                    }
+                },
+                "12": {
+                    "inputs": {
+                        "unet_name": "flux1-dev.safetensors",
+                        "weight_dtype": "default"
+                    },
+                    "class_type": "UNETLoader",
+                    "_meta": {
+                        "title": "Load Diffusion Model"
+                    }
+                },
+                "13": {
+                    "inputs": {
+                        "noise": [
+                            "25",
+                            0
+                        ],
+                        "guider": [
+                            "22",
+                            0
+                        ],
+                        "sampler": [
+                            "16",
+                            0
+                        ],
+                        "sigmas": [
+                            "17",
+                            0
+                        ],
+                        "latent_image": [
+                            "27",
+                            0
+                        ]
+                    },
+                    "class_type": "SamplerCustomAdvanced",
+                    "_meta": {
+                        "title": "SamplerCustomAdvanced"
+                    }
+                },
+                "16": {
+                    "inputs": {
+                        "sampler_name": "euler"
+                    },
+                    "class_type": "KSamplerSelect",
+                    "_meta": {
+                        "title": "KSamplerSelect"
+                    }
+                },
+                "17": {
+                    "inputs": {
+                        "scheduler": "simple",
+                        "steps": 20,
+                        "denoise": 1,
+                        "model": [
+                            "30",
+                            0
+                        ]
+                    },
+                    "class_type": "BasicScheduler",
+                    "_meta": {
+                        "title": "BasicScheduler"
+                    }
+                },
+                "22": {
+                    "inputs": {
+                        "model": [
+                            "30",
+                            0
+                        ],
+                        "conditioning": [
+                            "26",
+                            0
+                        ]
+                    },
+                    "class_type": "BasicGuider",
+                    "_meta": {
+                        "title": "BasicGuider"
+                    }
+                },
+                "25": {
+                    "inputs": {
+                        "noise_seed": Math.floor(Math.random() * 1000000)
+                    },
+                    "class_type": "RandomNoise",
+                    "_meta": {
+                        "title": "RandomNoise"
+                    }
+                },
+                "26": {
+                    "inputs": {
+                        "guidance": 3.5,
+                        "conditioning": [
+                            "6",
+                            0
+                        ]
+                    },
+                    "class_type": "FluxGuidance",
+                    "_meta": {
+                        "title": "FluxGuidance"
+                    }
+                },
+                "27": {
+                    "inputs": {
+                        "width": 1024,
+                        "height": 1024,
+                        "batch_size": 1
+                    },
+                    "class_type": "EmptySD3LatentImage",
+                    "_meta": {
+                        "title": "EmptySD3LatentImage"
+                    }
+                },
+                "30": {
+                    "inputs": {
+                        "max_shift": 1.15,
+                        "base_shift": 0.5,
+                        "width": 1024,
+                        "height": 1024,
+                        "model": [
+                            "12",
+                            0
+                        ]
+                    },
+                    "class_type": "ModelSamplingFlux",
+                    "_meta": {
+                        "title": "ModelSamplingFlux"
                     }
                 }
+            };
+            // Submit workflow to ComfyUI
+            const response = await fetch('/api/comfyui/prompt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prompt: baseWorkflow
+                })
             });
-            setVideo(result.data.video.url);
+            const data = await response.json();
+            const promptId = data.prompt_id;
+            // Poll for completion
+            let completed = false;
+            while(!completed){
+                const statusResponse = await fetch(`/api/comfyui/history/${promptId}`);
+                const statusData = await statusResponse.json();
+                if (statusData[promptId]?.outputs?.[9]?.images?.[0]) {
+                    const imageData = statusData[promptId].outputs[9].images[0];
+                    setImage(`/api/comfyui/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}`);
+                    completed = true;
+                } else {
+                    await new Promise((resolve)=>setTimeout(resolve, 1000)); // Wait 1 second before next poll
+                }
+            }
         } catch (error) {
             setError(error.message);
         } finally{
@@ -66,21 +266,21 @@ const Page = ()=>{
                         className: "rounded-lg sm:w-10 sm:h-10"
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 48,
+                        lineNumber: 207,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                         className: "text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#187ADB] to-[#4CAF50] bg-clip-text text-transparent",
-                        children: "Eden AI Video Generator"
+                        children: "Eden AI Image Generator"
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 55,
+                        lineNumber: 214,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.js",
-                lineNumber: 47,
+                lineNumber: 206,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -97,18 +297,18 @@ const Page = ()=>{
                                     children: "Enter your prompt"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 65,
+                                    lineNumber: 224,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
                                     id: "prompt",
                                     className: "w-full h-24 sm:h-32 px-3 sm:px-4 py-2 sm:py-3 bg-[#0F172A]/50 rounded-lg border border-[#187ADB]/30 focus:border-[#187ADB] focus:ring-2 focus:ring-[#187ADB] focus:outline-none text-white placeholder-gray-400 resize-none text-sm sm:text-base",
-                                    placeholder: "Describe the video you want to generate...",
+                                    placeholder: "Describe the image you want to generate...",
                                     value: prompt,
                                     onChange: (e)=>setPrompt(e.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 68,
+                                    lineNumber: 227,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -132,7 +332,7 @@ const Page = ()=>{
                                                         strokeWidth: "4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.js",
-                                                        lineNumber: 83,
+                                                        lineNumber: 242,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -141,38 +341,38 @@ const Page = ()=>{
                                                         d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.js",
-                                                        lineNumber: 84,
+                                                        lineNumber: 243,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 82,
+                                                lineNumber: 241,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Generating..."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 86,
+                                                lineNumber: 245,
                                                 columnNumber: 19
                                             }, this)
                                         ]
-                                    }, void 0, true) : 'Generate Video'
+                                    }, void 0, true) : 'Generate Image'
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 75,
+                                    lineNumber: 234,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.js",
-                            lineNumber: 64,
+                            lineNumber: 223,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 63,
+                        lineNumber: 222,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -197,7 +397,7 @@ const Page = ()=>{
                                                 strokeWidth: "4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 101,
+                                                lineNumber: 260,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -206,26 +406,26 @@ const Page = ()=>{
                                                 d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 102,
+                                                lineNumber: 261,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.js",
-                                        lineNumber: 100,
+                                        lineNumber: 259,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 99,
+                                    lineNumber: 258,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-base sm:text-lg text-[#187ADB] font-medium",
-                                    children: "Generating your video..."
+                                    children: "Generating your image..."
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 105,
+                                    lineNumber: 264,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -233,66 +433,66 @@ const Page = ()=>{
                                     children: "This may take a few moments"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 106,
+                                    lineNumber: 265,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.js",
-                            lineNumber: 98,
+                            lineNumber: 257,
                             columnNumber: 13
-                        }, this) : video ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("video", {
-                            src: video,
-                            controls: true,
+                        }, this) : image ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                            src: image,
+                            alt: "Generated image",
                             className: "w-full h-auto rounded-lg max-h-[500px] object-contain"
                         }, void 0, false, {
                             fileName: "[project]/app/page.js",
-                            lineNumber: 109,
+                            lineNumber: 268,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "text-center text-gray-400 px-4",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-base sm:text-lg",
-                                    children: "Your generated video will appear here"
+                                    children: "Your generated image will appear here"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 112,
+                                    lineNumber: 271,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-xs sm:text-sm mt-1 sm:mt-2",
-                                    children: "Enter a prompt and click generate to create your video"
+                                    children: "Enter a prompt and click generate to create your image"
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.js",
-                                    lineNumber: 113,
+                                    lineNumber: 272,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.js",
-                            lineNumber: 111,
+                            lineNumber: 270,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 96,
+                        lineNumber: 255,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.js",
-                lineNumber: 61,
+                lineNumber: 220,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.js",
-        lineNumber: 45,
+        lineNumber: 204,
         columnNumber: 5
     }, this);
 };
-_s(Page, "rsWiUFHei2yEnaknRGy75REiVgk=");
+_s(Page, "jJfCBvEnCTxRZZzp7X7eFZSQlWo=");
 _c = Page;
 const __TURBOPACK__default__export__ = Page;
 var _c;
